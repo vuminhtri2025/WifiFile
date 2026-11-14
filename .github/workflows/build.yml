@@ -5,68 +5,69 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+env:
+  # Keystore cố định (JKS, base64) -> mọi bản build cùng chữ ký, cài đè/cập nhật được
+  KEYSTORE_B64: "/u3+7QAAAAIAAAABAAAAAQAJd2lmaXNoYXJlAAABodivZBEAAAT/MIIE+zAMBgorBgEEASoCEQEBBIIE6ef+f+3HEsPYB3iYK4emEDthMUfm8YQ33dGWYkvcee3NWbZaX80e/sCvwIeAMnrYwJZ/8hNrZZCrT8LXFLfapXRqBlVHnyZw4vsJzOG5Q3uQ9zMgzySJRRzixuGG8aOQHbidPi+QzD4VuxWTAvUbQgbz9pJmJ3xa+RJ6v3VUxzHxjPqQ6yz6AAKseA8B4GQwpW8mqHCuImxKEXViLf3Hp4pCramole8sjhX97Zv5cUnezffhwqCWSecOavbwzk5pd/sf4ZngF8deCyfMJ13kI653+lw7KA3qeVOTnx42FA+B/oD7W0W+MBoE+0zi6+Ebd/W8yutnt2Mf1YyDJg9etJSgXpmCTzm02BQeiLK45nz/bfS0YUv5vNFzkp/M4EFHQvnbvpjC3capuAxd9DTFGfYyIdo4ayYhMNdYedyXwFWlTQOgKXG4YwmRheWi2AVxnXkRhBZtgGqS/5rXI0+QnI6dTwlNiyTLxJrPMyFQOwph3E6YT9WIV3kfhNR4TZRdwokiFhS7lzo5dLjxW1c3ccVzZtWeFLOHmqfPuLuIEyhOKMn5p6yi8vOqJt6/fufyjVApSAwZ6YObJX//lxOtXHVgYi1jxhioQar3WyVZ39IM1N/TBppeHOtQMzY4RipgGeqt4lBPFL7f6fEXZWTbcv8XxWkamKW7E+fxj3eNCMwaATjUpUwYw1JSkF/gZUgRUjlIb2aFXswn9ctlhI0xQYRQsfFyly36BtDrQnQujofGvhkgaeDGqBA+RM9J3hdmbhqJpY7jWR3c+jbDKxGzNUlt31QxVDKR76oqOCiGN0IJ2dQORyoK2bQVatKHtlxYMjrnfiqOQtdvxIbNqzj+LsXWGq2Re8hVZGlmexjzjma0XzY8FVPgXwWk2hiORhIwqCRpAel7lIHXAQSAWDu4U4yHmqLhfEnaKCpA+bZT1x/yrZxHyirUz30zRYwERQr5T/bOg64UZV/IEAxSVRtxZvevsNqpHU3bgbMKwxw3oYYTH7pI2mPoPId62ttOg3XsA+yhulkFDO9ShyuUcjdl6p3w6Fr7083LCdd8Z5KzAvD06wIgueoHawgpah4iSKoq2U7ASg5jg4DKha+v/hN1+nKLJgD98JMJiD5Whs9OzrY8GwiMOjqF+feTBC7VUQxr9dLV/Nnxr4ixOFk8j6tWSoXjCGhs61f+ySfgxPfOmiOftRfuzzk5sCTF9WotLdPn+orMEw0LESaJfWqgz1hOtfKxSQ+ERc7kNzL7WFv8IcaJXEW8v0WmReL1HwptIkqLq2f9q3ftv2GGTI/8QgWKYGWpUDCztuDyVBCb6+XV0bBi15BAsAGJZyCrIcnIaF08TI6lZqSLfMh7+zopc7rPjslesuhOwyH7Cq2oUmnUF6kX9OHhEwtV6cXDtLRyNxuBZscK1IH+9xszlkXVffU/nLFLYA9T2apZ8jmjkDplcG+CDVx9iMf4YIti++AwM0K2l/AoOFGtY6CLzU7zq/Jd0x0b7sDyP/Xqk3j2FLzhmvo56rQH5NGezfs8d8Nad0r8wxLRDsbLsiQ6Xh1xm6xcurEoHbXr1w28/Qe7vSIEW4vu5mMTmxg2tWwPfkpic3c5VkBK96Bf0E/c4yzIRnVGwjiD+yE3F9k9M0gk1ASwiO7w+6KXHBOM5NoNERAzHbDpV/kwxaWqHqThEwAAAAEABVguNTA5AAADYzCCA18wggJHoAMCAQICCHtGvFpPv0P+MA0GCSqGSIb3DQEBDAUAMF0xCzAJBgNVBAYTAlZOMQswCQYDVQQIEwJITjELMAkGA1UEBxMCSE4xEjAQBgNVBAoTCVdpZmlTaGFyZTEMMAoGA1UECxMDQXBwMRIwEAYDVQQDEwlXaWZpU2hhcmUwIBcNMjYxMTE0MDYxMjE1WhgPMjEyNjEwMjEwNjEyMTVaMF0xCzAJBgNVBAYTAlZOMQswCQYDVQQIEwJITjELMAkGA1UEBxMCSE4xEjAQBgNVBAoTCVdpZmlTaGFyZTEMMAoGA1UECxMDQXBwMRIwEAYDVQQDEwlXaWZpU2hhcmUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDR2OBzN3Apmu0P2z8AXBIUXJ6xmgWrzPxORI654wKtlxa4unEYKU9ydMKAy3biganzZt03j8nRMhUVY0u+m9A3780FPrqi7XQn9/5VOhW22FB7XNj79WuBG4w0mmEZB2tbhbeD3qxitiVQh/g8QQiSb0K+U/sO2QplTHnVSj61TN+LDuguqCeb0sC5chIa1ltyexwJkQdat9b6Pl23IZFKMDxse5Gg6Plegdq0HgV0N150iwx/R17ESYXIyMVHSketb8T1tT/wrfDQQB90Z8R/pssKHWhFpspvmTWLvAw+mvsbyxw778YJNS/2c3UHWj9rKcBwiBxTls7U5A7UBOO/AgMBAAGjITAfMB0GA1UdDgQWBBRO6xH27v7jqxhIoApwdpz6UK5ejjANBgkqhkiG9w0BAQwFAAOCAQEATxTXdL52AoPYc+nvOr/ojyUXGZyaQ8SxqPdNClIsu/cR69CTaICe5AH9149KrS+omjiPj8WgY4kTNPmLmnlgaI9rAcrfbc9FVtq2c0o/B/omb+xH1AwH4ADJ9cFJ70sMYDFNBfj42CoVGRwmsecTkig20IODW9GIWq8t9hI2OtL/BkV32qLD5OdiiKQHkduUQBrTIPC8i0TtFQ7rq9r6LbRYcLHnCV0in9o62FME6i+k+ikZhE+RYqi4PctCzz7J6gvxu/FwAjQGQHGTZVj5hJR4v9nh/NyW0jcmyRCkDz8d3Oyca9ZcuhyoT8e43AQipegXlrEXJhesL934W5xfihglQd0FmGMRBEwUd4MyXjfpfZ2k"
+  KEYSTORE_PASSWORD: "wifishare123"
+  KEY_ALIAS: "wifishare"
+  KEY_PASSWORD: "wifishare123"
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    # Keystore đã nằm sẵn trong source (app/rotation-release.jks).
-    # Các biến dưới đây khớp với app/build.gradle, giữ nguyên để mọi bản build đều ký cùng 1 key -> cài đè/cập nhật được.
-    env:
-      KEYSTORE_FILE: rotation-release.jks
-      KEYSTORE_PASSWORD: rotationctl2026
-      KEY_ALIAS: rotation
-      KEY_PASSWORD: rotationctl2026
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Unzip source
+      - name: Giải nén project (nếu có file .zip ở thư mục gốc repo)
+        id: src
         run: |
-          ZIP_FILE="RotationControl.zip"
-          if [ ! -f "$ZIP_FILE" ]; then
-            ZIP_FILE=$(ls -1 *.zip 2>/dev/null | head -n 1)
+          set -e
+          ZIP=$(ls -1 *.zip 2>/dev/null | head -n 1 || true)
+          if [ -n "$ZIP" ]; then
+            echo ">> Giải nén: $ZIP"
+            rm -rf _src && mkdir _src
+            unzip -q -o "$ZIP" -d _src
+            SETTINGS=$(find _src -name settings.gradle.kts | head -n 1)
+            ROOT=$(dirname "$SETTINGS")
+          else
+            ROOT=.
           fi
-          if [ -z "$ZIP_FILE" ]; then
-            echo "Không tìm thấy file .zip trong repo" && exit 1
-          fi
-          echo "Giải nén: $ZIP_FILE"
-          rm -rf build_src
-          mkdir build_src
-          unzip -q -o "$ZIP_FILE" -d build_src
-          SETTINGS=$(find build_src -maxdepth 3 -name "settings.gradle*" | head -n 1)
-          if [ -z "$SETTINGS" ]; then
-            echo "Không tìm thấy settings.gradle trong file zip" && exit 1
-          fi
-          PROJECT_DIR=$(dirname "$SETTINGS")
-          echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
-          echo "Project nằm tại: $PROJECT_DIR"
-          ls -la "$PROJECT_DIR" "$PROJECT_DIR/app"
+          test -f "$ROOT/settings.gradle.kts" || { echo "Không tìm thấy settings.gradle.kts"; exit 1; }
+          echo "root=$ROOT" >> "$GITHUB_OUTPUT"
+          echo ">> Project root: $ROOT"
+          ls -la "$ROOT" "$ROOT/app"
 
-      - name: Set up JDK 17
+      - name: Ghi keystore
+        run: echo "$KEYSTORE_B64" | base64 -d > "${{ steps.src.outputs.root }}/app/release.jks"
+
+      - name: Cài JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
-      - name: Set up Gradle
+      - name: Kiểm tra keystore
+        run: keytool -list -keystore "${{ steps.src.outputs.root }}/app/release.jks" -storepass "$KEYSTORE_PASSWORD"
+
+      - name: Chấp nhận license Android SDK
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+
+      - name: Cài Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.7'
+          gradle-version: "8.9"
 
-      - name: Build release APK
-        working-directory: ${{ env.PROJECT_DIR }}
-        run: gradle assembleRelease --no-daemon --stacktrace -PversionCode=${{ github.run_number }}
-
-      - name: Rename APK
-        run: |
-          APK=$(find "$PROJECT_DIR/app/build/outputs/apk/release" -name "*.apk" | head -n 1)
-          mkdir -p dist
-          cp "$APK" dist/RotationControl.apk
-          ls -la dist
+      - name: Build APK (release, đã ký)
+        working-directory: ${{ steps.src.outputs.root }}
+        run: gradle assembleRelease --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: RotationControl-apk
-          path: dist/RotationControl.apk
+          name: WifiShare-apk
+          path: ${{ steps.src.outputs.root }}/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
