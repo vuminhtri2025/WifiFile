@@ -1,4 +1,39 @@
-FILE" -d build_src
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Keystore đã nằm sẵn trong source (app/rotation-release.jks).
+    # Các biến dưới đây khớp với app/build.gradle, giữ nguyên để mọi bản build đều ký cùng 1 key -> cài đè/cập nhật được.
+    env:
+      KEYSTORE_FILE: rotation-release.jks
+      KEYSTORE_PASSWORD: rotationctl2026
+      KEY_ALIAS: rotation
+      KEY_PASSWORD: rotationctl2026
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unzip source
+        run: |
+          ZIP_FILE="RotationControl.zip"
+          if [ ! -f "$ZIP_FILE" ]; then
+            ZIP_FILE=$(ls -1 *.zip 2>/dev/null | head -n 1)
+          fi
+          if [ -z "$ZIP_FILE" ]; then
+            echo "Không tìm thấy file .zip trong repo" && exit 1
+          fi
+          echo "Giải nén: $ZIP_FILE"
+          rm -rf build_src
+          mkdir build_src
+          unzip -q -o "$ZIP_FILE" -d build_src
           SETTINGS=$(find build_src -maxdepth 3 -name "settings.gradle*" | head -n 1)
           if [ -z "$SETTINGS" ]; then
             echo "Không tìm thấy settings.gradle trong file zip" && exit 1
